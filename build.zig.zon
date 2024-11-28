@@ -1,0 +1,18 @@
+.{
+    .name = "hiredis",
+    .version = "1.2.0",
+    .dependencies = .{
+        .hiredis = .{
+            .url = "https://github.com/redis/hiredis/archive/refs/tags/v1.2.0.tar.gz",
+            .hash = "12208a5afde556effa03becdce5fba181c4d66c4e8a7560c11fd8858ea4b3e4c5f02",
+        },
+    },
+    .minimum_zig_version = "0.12.0",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "LICENSE",
+        "LICENSE-HIREDIS",
+        "README.md",
+    },
+}

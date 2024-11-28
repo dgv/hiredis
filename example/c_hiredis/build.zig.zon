@@ -1,0 +1,16 @@
+.{
+    .name = "zig_hiredis",
+    .version = "1.0.0",
+    .minimum_zig_version = "0.12.0",
+    .dependencies = .{
+        .hiredis = .{
+            .url = "../..",
+            .hash = "122002e22ea4f612090919966b2d9af4ec0c1af7d1690694d3e7058599823c67b283",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
