@@ -31,7 +31,7 @@ pub fn build(b: *std.Build) !void {
 
     for (hiredis_sources) |source| {
         lib.addCSourceFile(.{
-            .file = try hiredis_path.join(b.allocator, source),
+            .file = hiredis_dep.path(source),
             .flags = &[_][]const u8{ "-std=c99", "-Wall", "-Wextra", "-Werror" },
         });
     }
@@ -61,11 +61,11 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(lib);
 
     const hiredis_zig = b.addTranslateC(.{
-        .root_source_file = try hiredis_path.join(b.allocator, "hiredis.h"),
+        .root_source_file = hiredis_dep.path("hiredis.h"),
         .target = target,
         .optimize = optimize,
     });
-    hiredis_zig.addIncludePath(hiredis_path);
+    //hiredis_zig.addIncludePath(hiredis_path);
 
     const hiredis_mod = hiredis_zig.addModule("hiredis");
     hiredis_mod.linkLibrary(lib);
@@ -82,7 +82,7 @@ pub fn build(b: *std.Build) !void {
         lib.linkSystemLibrary("crypto");
 
         ssl_lib.addCSourceFile(.{
-            .file = try hiredis_path.join(b.allocator, "ssl.c"),
+            .file = hiredis_dep.path("ssl.c"),
             .flags = &[_][]const u8{ "-std=c99", "-Wall", "-Wextra", "-Werror" },
         });
         ssl_lib.linkLibrary(lib);
@@ -93,11 +93,11 @@ pub fn build(b: *std.Build) !void {
         b.installArtifact(ssl_lib);
 
         const hiredis_ssl_zig = b.addTranslateC(.{
-            .root_source_file = try hiredis_path.join(b.allocator, "hiredis_ssl.h"),
+            .root_source_file = hiredis_dep.path("hiredis_ssl.h"),
             .target = target,
             .optimize = optimize,
         });
-        hiredis_ssl_zig.addIncludePath(hiredis_path);
+        //hiredis_ssl_zig.addIncludePath(hiredis_path);
 
         const hiredis_ssl_mod = hiredis_ssl_zig.addModule("hiredis-ssl");
         hiredis_ssl_mod.linkLibrary(ssl_lib);
@@ -120,7 +120,7 @@ pub fn build(b: *std.Build) !void {
 
     if (enable_tests) {
         const test_suite = try getHiredisExecutable(b, target, optimize, hiredis_path, "test.c", "hiredis-test");
-
+        
         if (use_ssl) {
             test_suite.linkLibrary(ssl_lib);
             test_suite.defineCMacro("HIREDIS_TEST_SSL", "1");
@@ -145,7 +145,7 @@ fn getHiredisExecutable(b: *std.Build, target: std.Build.ResolvedTarget, optimiz
         .link_libc = true,
     });
     exe.addCSourceFile(.{
-        .file = try hiredis_path.join(b.allocator, sub_path),
+        .file = b.path(sub_path),
     });
     exe.addIncludePath(hiredis_path);
 
